@@ -1,0 +1,1 @@
+# GitOps manifests land here
