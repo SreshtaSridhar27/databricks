@@ -1,0 +1,29 @@
+# Externalized K8s Deployment template (the other team's pattern).
+# K8s engineers edit this without touching Python. The agent falls back to an embedded
+# copy if this file is missing. Variables injected by deployment_agent.py::_render_manifest().
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ resource_name }}
+  namespace: {{ environment }}
+  labels:
+    app: {{ resource_name }}
+    managed-by: hon-deployment-agent
+    resource-type: {{ resource_type }}
+spec:
+  replicas: {{ replicas }}
+  selector:
+    matchLabels:
+      app: {{ resource_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ resource_name }}
+    spec:
+      containers:
+        - name: {{ resource_name }}
+          image: {{ container_registry }}/{{ resource_name }}:{{ version }}
+          resources:
+            limits:
+              cpu: "{{ cpu_limit }}"
+              memory: "{{ memory_limit }}"
